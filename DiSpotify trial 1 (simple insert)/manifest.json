@@ -1,0 +1,13 @@
+{
+  "manifest_version": 2,
+  "name": "DiSpotify Trial v1",
+  "description": "Discogs relase Spotify searcher",
+  "version": "1.0.0",
+  "content_scripts": [
+    {
+      "matches": ["https://*.discogs.com/release/*"],
+      "js": ["content_script.js"],
+      "run_at": "document_end"
+    }
+  ]
+}
