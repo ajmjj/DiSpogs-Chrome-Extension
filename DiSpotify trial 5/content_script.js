@@ -10,13 +10,17 @@ const getRelease = function(){
   return {name : releaseName, artist : releaseArtist};
 }
 
+// let spotifyLink = "";
+
 const addButton = function(exists){
   const targetDiv = document.getElementsByClassName('body_32Bo9').item(0);
   var buttonColour = getButtonData(exists).colour;
 
   var button = document.createElement("BUTTON");
   button.className= 'DiSpogsButton';
+  button.id = 'DiSpogsButton';
   button.innerHTML = getButtonData(exists).text;
+
   button.style = `background-color:${buttonColour};
     border-radius:28px;
     border:1px solid #18ab29;
@@ -59,7 +63,11 @@ chrome.runtime.sendMessage({message: 'releaseInfo', artist: discogsRelease.artis
     exists = false;
   }
   console.log(`match exists: ${exists}`)
+  console.log(`spotify link: ${response.link}`)
   addButton(exists);
+
+  let newButton = document.getElementById('DiSpogsButton');
+  newButton.onclick = function (){window.open(response.link, '_blank');}
 });
 
 

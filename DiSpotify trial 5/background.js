@@ -131,10 +131,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     console.log(`album name: ${album.name}, album artists: ${album.artist}`);
                     if (compareReleaseToAlbum(release, album)) {
                         console.log("MATCH");
-                        sendResponse({ message: 'match' });
+                        sendResponse({ message: 'match', link: data.albums.items[0].external_urls.spotify });
                     } else {
                         console.log("NO MATCH");
-                        sendResponse({ message: 'no match' });
+                        sendResponse({ message: 'no match' , link: null});
                     }
                 } else {
                     console.log('Search returned no results');
