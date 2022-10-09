@@ -8,7 +8,7 @@ let ACCESS_TOKEN = '';
 
 let user_signed_in = false;
 
-console.log(chrome.identity.getRedirectURL('spotify'));
+// console.log(chrome.identity.getRedirectURL('spotify'));
 const getAuthUrl = function () {
     STATE = encodeURIComponent('meet' + Math.random().toString(36).substring(2, 15));
 
@@ -62,7 +62,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.message === 'logout') {
         console.log('logout message received');
         // chrome.identity.clearAllCachedAuthTokens();
-        console.log('cleared all cached auth tokens');
+        // console.log('cleared all cached auth tokens');
         chrome.action.setPopup({ popup: './popup.html' });
         sendResponse({ message: 'success' });
     }
