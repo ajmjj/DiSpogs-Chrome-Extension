@@ -20,6 +20,12 @@
     "host_permissions": [
         "https://accounts.spotify.com/*"
     ],
+    "web_accessible_resources": [
+        {
+            "matches": ["<all_urls>"],
+            "resources": ["/images/*"]
+        }
+    ],
     "permissions": [
         "identity",
         "scripting"

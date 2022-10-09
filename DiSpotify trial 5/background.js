@@ -29,30 +29,34 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 url: getAuthUrl(),
                 interactive: true
             }, function (redirectUrl) {
-                console.log(`redirectUrl: ${redirectUrl}`);
-                // if (chrome.runtime.lastError) {
-                //     console.log('failed: chrome.runtime.lastError');
-                //     sendResponse({ message: 'fail' });
-                ACCESS_TOKEN = redirectUrl.substring(redirectUrl.indexOf('access_token=') + 13);
-                ACCESS_TOKEN = ACCESS_TOKEN.substring(0, ACCESS_TOKEN.indexOf('&'));
-                let state = redirectUrl.substring(redirectUrl.indexOf('state=') + 6);
-
-                if (state === STATE){
-                    console.log("SUCCESS")
-                    user_signed_in = true;
-
-                    setTimeout(() => {
-                        ACCESS_TOKEN = '';
-                        chrome.identity.clearAllCachedAuthTokens();
-                        user_signed_in = false;
-                    }, 3600000);
-
-                    chrome.action.setPopup({ popup: './popup-signed-in.html' }, () => {
-                        sendResponse({ message: 'success' });
-                    });
+                if (typeof redirectUrl === 'undefined') {
+                    console.log('Error: redirectUrl is undefined');
                 } else {
-                    console.log('failed: state !== STATE');
-                    sendResponse({ message: 'fail' });
+                    console.log(`redirectUrl: ${redirectUrl}`);
+                    // if (chrome.runtime.lastError) {
+                    //     console.log('failed: chrome.runtime.lastError');
+                    //     sendResponse({ message: 'fail' });
+                    ACCESS_TOKEN = redirectUrl.substring(redirectUrl.indexOf('access_token=') + 13);
+                    ACCESS_TOKEN = ACCESS_TOKEN.substring(0, ACCESS_TOKEN.indexOf('&'));
+                    let state = redirectUrl.substring(redirectUrl.indexOf('state=') + 6);
+
+                    if (state === STATE){
+                        console.log("SUCCESS")
+                        user_signed_in = true;
+
+                        setTimeout(() => {
+                            ACCESS_TOKEN = '';
+                            chrome.identity.clearAllCachedAuthTokens();
+                            user_signed_in = false;
+                        }, 3600000);
+
+                        chrome.action.setPopup({ popup: './popup-signed-in.html' }, () => {
+                            sendResponse({ message: 'success' });
+                        });
+                    } else {
+                        console.log('failed: state !== STATE');
+                        sendResponse({ message: 'fail' });
+                    }
                 }
             });
             return true;
@@ -63,6 +67,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         console.log('logout message received');
         // chrome.identity.clearAllCachedAuthTokens();
         // console.log('cleared all cached auth tokens');
+        user_signed_in = false;
+        ACCESS_TOKEN = '';
         chrome.action.setPopup({ popup: './popup.html' });
         sendResponse({ message: 'success' });
     }
@@ -71,7 +77,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 // Searches spotify for release, returns first album found if it exists
 const searchSpotifyForAlbum = async function (name, artist) {
     const searchUrl = `https://api.spotify.com/v1/search?q=${name}%20artist:${artist}&type=album&limit=1`;
-    console.log(`Access token: ${ACCESS_TOKEN}`);
+    // console.log(`Access token: ${ACCESS_TOKEN}`);
     const response = await fetch(searchUrl, {
         method: 'GET',
         headers: {
@@ -126,18 +132,23 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             .then((data) => {
                 let album = {};
                 if (data !== undefined) { 
-                    album.name = data.albums.items[0].name;
-                    album.artist = data.albums.items[0].artists[0].name;
-                    console.log(`album name: ${album.name}, album artists: ${album.artist}`);
-                    if (compareReleaseToAlbum(release, album)) {
-                        console.log("MATCH");
-                        sendResponse({ message: 'match', link: data.albums.items[0].external_urls.spotify });
+                    if (data.albums.items.length > 0) {
+                        album.name = data.albums.items[0].name;
+                        album.artist = data.albums.items[0].artists[0].name;
+                        console.log(`album name: ${album.name}, album artists: ${album.artist}`);
+                        if (compareReleaseToAlbum(release, album)) {
+                            console.log("MATCH");
+                            sendResponse({ message: 'match', link: data.albums.items[0].external_urls.spotify });
+                        } else {
+                            console.log("NO MATCH");
+                            sendResponse({ message: 'no match' , link: null});
+                        }
                     } else {
-                        console.log("NO MATCH");
-                        sendResponse({ message: 'no match' , link: null});
+                        console.log('Search returned no results');
+                        sendResponse({ message: 'no match', link: null });
                     }
                 } else {
-                    console.log('Search returned no results');
+                    console.log('Error: data returned from search is undefined');
                 }
             });    
     return true;

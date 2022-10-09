@@ -8,47 +8,28 @@ const getRelease = function(){
   // console.log("releaseName: " + releaseName);
 
   return {name : releaseName, artist : releaseArtist};
-}
+};
 
-// let spotifyLink = "";
+let extensionId = chrome.runtime.id;
 
 const addButton = function(exists){
   const targetDiv = document.getElementsByClassName('body_32Bo9').item(0);
-  var buttonColour = getButtonData(exists).colour;
 
   var button = document.createElement("BUTTON");
   button.className= 'DiSpogsButton';
   button.id = 'DiSpogsButton';
-  button.innerHTML = getButtonData(exists).text;
-
-  button.style = `background-color:${buttonColour};
-    border-radius:28px;
-    border:1px solid #18ab29;
-    display:inline-block;
-    cursor:pointer;
-    color:#ffffff;
-    font-family:Arial;
-    font-size:15px;
-    padding:11px 16px;
-    text-decoration:none;`;
-  targetDiv.appendChild(button);
-
-  //using Shadow Root
-  // var root = targetDiv.attachShadow({mode: 'open'}); //Create shadow root
-  // var button = document.createElement('BUTTON'); 
-  // div.className = 'DiSpogsButton';
-  // button.innerHTML = "<style></style>" + "Available on Spotify";
-  // root.appendChild(button)
-}
-
-const getButtonData = function(exists){
   if (exists){
-    return {text: 'Available', colour: '#44c767'};
+    button.style.background = `url("chrome-extension://${extensionId}/images/spotgreen.png") no-repeat`;
+  } else if (!exists){
+    button.style.background = `url("chrome-extension://${extensionId}/images/spotgrey.png")  no-repeat`;
   }
-  else {
-    return {text: 'Not Available', colour: '#FF4C26'};
-  }
-}
+  button.style.backgroundSize = 'cover';
+  button.style.width = '48px';
+  button.style.height = '48px';
+  button.style.border = 'none';
+  button.padding = '0px';
+  targetDiv.appendChild(button);
+};
 
 var discogsRelease = getRelease();
 let exists = null;
@@ -65,12 +46,10 @@ chrome.runtime.sendMessage({message: 'releaseInfo', artist: discogsRelease.artis
   console.log(`match exists: ${exists}`)
   console.log(`spotify link: ${response.link}`)
   addButton(exists);
-  
+
   if (exists){
     let newButton = document.getElementById('DiSpogsButton');
     newButton.onclick = function (){window.open(response.link, '_blank');}
   }
   
 });
-
-
