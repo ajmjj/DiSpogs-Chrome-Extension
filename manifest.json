@@ -29,5 +29,8 @@
     "permissions": [
         "identity",
         "scripting"
-    ]
+    ],
+    "icons": {
+           "48": "/images/Icons/DiSpogsIcon48.png",
+          "128": "/images/Icons/DiSpogsIcon128.png" }
 }
