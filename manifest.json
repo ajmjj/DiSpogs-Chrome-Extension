@@ -1,6 +1,6 @@
 {
-    "name": "DiSpogs v5",
-    "description": "DiSpogs v5",
+    "name": "DiSpogs",
+    "description": "Discogs Chrome extension that searches currently viewed release for a match on Spotify",
     "version": "0.1.0",
     "manifest_version": 3,
     "background": {
@@ -15,7 +15,7 @@
       ],
     "action": {
         "default_popup": "popup.html",
-        "default_title": "DiSpogs v5"
+        "default_title": "DiSpogs"
     },
     "host_permissions": [
         "https://accounts.spotify.com/*"
