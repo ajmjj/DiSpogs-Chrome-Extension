@@ -1,5 +1,0 @@
-PROCESS.ENV.REDIRECTURI = 'https://fnahhapjeaegjfmkfelamhfldmmfnklp.chromiumapp.org/success' //change
-
-PROCESS.ENV.CLIENTSECRET = '22b83c68988947bab9a7a8ca229f0700'
-
-PROCESS.ENV.CLIENTID = '93eecbb9130a4a26b0b4af8ee76cba97'
