@@ -67,3 +67,79 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         sendResponse({ message: 'success' });
     }
 });
+
+// Searches spotify for release, returns first album found if it exists
+const searchSpotifyForAlbum = async function (name, artist) {
+    const searchUrl = `https://api.spotify.com/v1/search?q=${name}%20artist:${artist}&type=album&limit=1`;
+    console.log(`Access token: ${ACCESS_TOKEN}`);
+    const response = await fetch(searchUrl, {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + ACCESS_TOKEN,
+            'Content-Type': 'application/json'
+        }
+    });
+
+    console.log(`Response code: ${response.status}`); 
+
+    if (response.status === 200) {
+        let data = await response.json();
+        console.log(data);
+        return data;
+    } else if (response.status === 401) {
+        console.log(`Error 400: Bad or expired access token. Please sign in again.`);
+    } else if (response.status === 403) {
+        console.log("Error 403: Bad OAuth request (wrong consumer key, bad nonce, expired timestamp...).");
+    } else if (response.status === 429) {
+        console.log("Error 429: The app has exceeded its rate limits. Please try again later");
+    }
+
+    //todo -> catch errors
+
+    // console.log(response.json().then(
+    //     (data) => { 
+    //         console.log(`data ${data}`); 
+    //         return data 
+    //     }
+    // ));
+    
+};
+
+const compareReleaseToAlbum = function (release, album) {
+    if (release.name.toLowerCase() === album.name.toLowerCase() && release.artist.toLowerCase() === album.artist.toLowerCase()) {
+        return true;
+    }
+};
+
+// todo: get all album artists
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.message === 'releaseInfo') {
+        let release = {};
+        release.name = request.name;
+        release.artist = request.artist;    
+        console.log(`release name: ${release.name}`);
+        console.log(`release artist: ${release.artist}`);
+        
+        
+        // Search Spotify for album
+        searchSpotifyForAlbum(release.name, release.artist)
+            .then((data) => {
+                let album = {};
+                if (data !== undefined) { 
+                    album.name = data.albums.items[0].name;
+                    album.artist = data.albums.items[0].artists[0].name;
+                    console.log(`album name: ${album.name}, album artists: ${album.artist}`);
+                    if (compareReleaseToAlbum(release, album)) {
+                        console.log("MATCH");
+                        sendResponse({ message: 'match' });
+                    } else {
+                        console.log("NO MATCH");
+                        sendResponse({ message: 'no match' });
+                    }
+                } else {
+                    console.log('Search returned no results');
+                }
+            });    
+    return true;
+    }
+});
