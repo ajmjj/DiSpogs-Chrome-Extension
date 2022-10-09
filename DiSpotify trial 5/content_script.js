@@ -65,9 +65,12 @@ chrome.runtime.sendMessage({message: 'releaseInfo', artist: discogsRelease.artis
   console.log(`match exists: ${exists}`)
   console.log(`spotify link: ${response.link}`)
   addButton(exists);
-
-  let newButton = document.getElementById('DiSpogsButton');
-  newButton.onclick = function (){window.open(response.link, '_blank');}
+  
+  if (exists){
+    let newButton = document.getElementById('DiSpogsButton');
+    newButton.onclick = function (){window.open(response.link, '_blank');}
+  }
+  
 });
 
 
