@@ -1,5 +1,5 @@
 # DiSpogs-Chrome-Extension
-DiSpogs Chrome extension automatically searches Spotify for the release that is currently open, and displays the result on the Discogs release page in the form of a badge. 
+DiSpogs is a 100% Vanilla JS Chrome extension that automatically searches Spotify for the release that is currently open, and displays the result on the Discogs release page in the form of a badge. 
 
 The badge can be clicked if green (match found), in which case it will open the release in spotify in a new tab.
 
