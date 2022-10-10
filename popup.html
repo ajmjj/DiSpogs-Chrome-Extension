@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
     <title>Document</title>
     <style>
         body {
-            width: 300px;
+            width: 350px;
             height: auto;
+
         }
         div {
             position: relative;
@@ -16,26 +18,37 @@
             width: 50%;
             height: 25%;
             padding: 5px;
-            font-size: 2.5em;
-            background-color: red;
-            border-radius: 5px;
+            font-size: 1.25rem;
+            background-color: #69DC72;
+            border-radius: 500px;
             text-align: center;
-            color: white;
-            font-family: monospace;
-            font-weight: bold;
+            color: black;
+            font-family: 'Montserrat', Helvetica;
             margin-bottom: 15px;
             cursor: pointer;
-            transition-duration: 0.3s;
+            transition-duration: 0.2s;
         }
 div:hover {
-            background-color: black;
-            transform: translateX(-50%) scale(1.3);
+            background-color: darkgray;
+            color: white;
+            /* transform: translateX(-50%) scale(1.3); */
+        }
+        h6 {
+            /* position: relative; */
+            /* left: 50%; */
+            transform: translateY(-50%);
+            font-family: 'Montserrat', Helvetica;
+            font-size: 2em;
+            color: black;
+            margin-bottom: 15px;
+            align-self: center;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <h1>Sign-In With Your Spotify Account to Use This Extension</h1>
-    <div id='sign-in'>Sign In</div>
+    <h6>Log in with Spotify to use the extension</h1>
+    <div id='sign-in'>Log In</div>
     <script src="./popup-script.js"></script>
 </body>
 </html>
